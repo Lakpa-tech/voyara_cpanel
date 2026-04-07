@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Voyara</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,800;1,800&amp;family=Montserrat:wght@300;400;500;600&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="<?= ASSETS_URL ?>/css/voyara_v2.css" rel="stylesheet" />
+
+    <script>
+        function readTheme() {
+            var theme = localStorage.getItem('theme');
+            if (!theme) {
+                return "light";
+            }
+            return theme;
+        }
+
+        if (readTheme() === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body
+    class="bg-linen dark:bg-charcoal text-charcoal dark:text-linen font-sans selection:bg-clay selection:text-linen transition-colors duration-300">
+
+    <nav
+        class="bg-linen/90 dark:bg-charcoal/90 backdrop-blur-md sticky top-0 z-50 border-b border-forest/10 dark:border-linen/10 transition-colors duration-300">
+        <div class="flex justify-between items-center px-4 md:px-12 py-4 w-full max-w-[1600px] mx-auto">
+            <div class="font-serif text-2xl font-extrabold tracking-tighter text-forest dark:text-linen">Voyara</div>
+            <div class="hidden lg:flex items-center gap-8">
+                <a class="nav-link" href="<?= APP_URL ?>/packages">Destinations</a>
+                <a class="nav-link" href="<?= APP_URL ?>/packages">Experiences</a>
+                <a class="nav-link" href="#">Journal</a>
+                <a class="nav-link" href="#">Concierge</a>
+            </div>
+            <div class="flex items-center gap-2 md:gap-6">
+
+                <button id="theme-toggle" type="button"
+                    class="relative text-forest dark:text-linen hover:bg-forest/10 dark:hover:bg-linen/10 rounded-full w-10 h-10 transition-colors flex items-center justify-center overflow-hidden">
+                    <span id="theme-toggle-dark-icon"
+                        class="absolute material-symbols-outlined text-lg transition-all duration-300 opacity-0 scale-50 rotate-90">dark_mode</span>
+                    <span id="theme-toggle-light-icon"
+                        class="absolute material-symbols-outlined text-lg transition-all duration-300 opacity-0 scale-50 -rotate-90">light_mode</span>
+                </button>
+<?php if (Auth::check()): ?>
+                <a href="<?= APP_URL ?>/dashboard" class="btn-primary transition-transform hover:scale-105 active:scale-95 hidden md:block">Dashboard</a>
+<?php else: ?>
+                <a href="<?= APP_URL ?>/login" class="btn-primary transition-transform hover:scale-105 active:scale-95 hidden md:block">Log In</a>
+<?php endif; ?>
+                <button id="mobile-menu-btn"
+                    class="lg:hidden relative text-forest dark:text-linen w-10 h-10 flex items-center justify-center cursor-pointer overflow-hidden rounded-full hover:bg-forest/10 dark:hover:bg-linen/10 transition-colors">
+                    <span id="mobile-menu-open"
+                        class="absolute transition-all duration-300 opacity-100 scale-100 rotate-0 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="1.5" d="m2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5" />
+                        </svg>
+                    </span>
+                    <span id="mobile-menu-close"
+                        class="absolute transition-all duration-300 opacity-0 scale-50 rotate-90 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M13.46 12L19 17.54V19h-1.46L12 13.46L6.46 19H5v-1.46L10.54 12L5 6.46V5h1.46L12 10.54L17.54 5H19v1.46z" />
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu"
+            class="opacity-0 pointer-events-none lg:hidden bg-linen dark:bg-charcoal border-b border-forest/10 dark:border-linen/10 absolute w-full left-0 top-full transition-all duration-300 shadow-xl -translate-y-4">
+            <div class="flex flex-col px-6 py-6 gap-6">
+                <a class="nav-link text-lg" href="<?= APP_URL ?>/packages">Destinations</a>
+                <a class="nav-link text-lg" href="<?= APP_URL ?>/packages">Experiences</a>
+                <a class="nav-link text-lg" href="#">Journal</a>
+                <a class="nav-link text-lg" href="#">Concierge</a>
+<?php if (Auth::check()): ?>
+                <a href="<?= APP_URL ?>/dashboard" class="btn-primary w-full mt-2 py-3">Dashboard</a>
+<?php else: ?>
+                <a href="<?= APP_URL ?>/login" class="btn-primary w-full mt-2 py-3">Log In</a>
+<?php endif; ?>
+            </div>
+        </div>
+    </nav>
+
+
+    <section
+        class="relative h-[80vh] max-h-[800px] min-h-[400px] md:min-h-[500px] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img alt="Majestic Mountains"
+                class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-[10s]"
+                src="https://voyara.utsav56.me/images/hero-bg.jpg" />
+            <div class="absolute inset-0 bg-charcoal/40 dark:bg-charcoal/60 mix-blend-multiply"></div>
+        </div>
+        <div class="relative z-10 text-center px-4 md:px-6 max-w-4xl">
+            <h1
+                class="font-serif font-extrabold text-4xl sm:text-5xl md:text-7xl text-linen mb-6 leading-tight tracking-tighter drop-shadow-lg">
+                Where Will Your Story Begin?</h1>
+            <p
+                class="font-sans font-light text-sm sm:text-base md:text-lg text-linen/90 mb-8 max-w-xl mx-auto leading-relaxed">
+                Bespoke travel experiences crafted for those who seek wonder in every corner of the world.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="<?= APP_URL ?>/packages" class="btn-hero border border-forest w-full sm:w-auto text-center" style="display: flex; align-items: center; justify-content: center;">Explore Journeys</a>
+                <button class="btn-hero-outline w-full sm:w-auto">Our Philosophy</button>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="py-20 md:py-24 px-6 md:px-12 max-w-[1600px] mx-auto">
+        <div class="mb-16 flex flex-col items-center text-center">
+            <span class="section-subtitle mb-3 block">The Collection</span>
+            <h2 class="font-serif font-extrabold text-4xl md:text-5xl text-forest dark:text-linen">Trending Destinations
+            </h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start w-full mx-auto">
+
+            <div class="group flex flex-col gap-5">
+                <div class="overflow-hidden rounded-soft aspect-[4/5] shadow-xl shadow-charcoal/10 relative">
+                    <img alt="Patagonian Peaks"
+                        class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0CeXXbOoWY24BBU-HR08bLae_0OneprzlDfz7bB7KR77UIyhpUVdYsoTjI3EbdMFc6hptLAjXzcNSaGOVSIVutD-cIf_WAD_OdXcFaBiE8knkZmZRIuqDxh20UP4qcWyUmqFrHvxydZf8IRCHPHAL1g64qn4w-ovE_iQSx190ntEORSPqR5Bh5evdfiUqDtFn0HP768Hl36u_KSs5MhXIq1Qxd9o8cUl9k5sQd_PYuhUsx6rvS_7csXf_79Ll6JpI4U4suCZRhVg" />
+                </div>
+                <div class="w-full px-2">
+                    <div class="flex flex-col mb-2">
+                        <h3 class="font-serif font-bold text-2xl text-forest dark:text-linen leading-tight mb-1">
+                            Patagonian Peaks</h3>
+                        <span class="font-sans text-clay font-semibold text-lg">From $14,200</span>
+                    </div>
+                    <p class="font-sans font-light text-sm text-charcoal/70 dark:text-linen/70 mb-5 leading-relaxed">
+                        Venture into the raw wilderness of the Southern Andes, where granite towers pierce the sky.
+                    </p>
+                    <div class="flex justify-between items-center pt-4 border-t border-forest/10 dark:border-linen/10">
+                        <span
+                            class="font-sans font-medium text-[9px] tracking-widest uppercase text-forest/70 dark:text-linen/70">7
+                            Nights</span>
+                        <a href="<?= APP_URL ?>/packages"
+                            class="font-sans font-medium text-[10px] tracking-widest uppercase border-b border-clay pb-1 text-clay hover:opacity-75 transition-opacity">View</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="group flex flex-col gap-5">
+                <div class="overflow-hidden rounded-soft aspect-[4/5] shadow-xl shadow-charcoal/10 relative">
+                    <img alt="Swiss Alpenglow"
+                        class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO530rpNAhW3B1bLaRub978gdDSucYLo97NMUx_1TCuUt2gklsHR0fEi3IkFVq86eJ31iTUPyxsqTwSiX_OvFq6kNiOZdcphFQePBEflJN16ku8vDXK5b7L_Pc_-w3YWAvwfFIBLUFc5dBbCiW0Hy0_8VK4RXJnQ8MLF8C3m_1me-EKsYSoJEjLdKWO6cwUuHaVKIcLffruy-KDcuFX6gSUwdM01pDat4Y13cFwXyiPbvm-nWcL62dHrahwinVp7DoewhbWexCKT0" />
+                </div>
+                <div class="w-full px-2">
+                    <div class="flex flex-col mb-2">
+                        <h3 class="font-serif font-bold text-2xl text-forest dark:text-linen leading-tight mb-1">Swiss
+                            Alpenglow</h3>
+                        <span class="font-sans text-clay font-semibold text-lg">$12,800</span>
+                    </div>
+                    <p class="font-sans font-light text-sm text-charcoal/70 dark:text-linen/70 mb-5 leading-relaxed">
+                        Experience the peak of alpine luxury in St. Moritz, featuring private helicopter tours.
+                    </p>
+                    <div class="flex justify-between items-center pt-4 border-t border-forest/10 dark:border-linen/10">
+                        <span
+                            class="font-sans font-medium text-[9px] tracking-widest uppercase text-forest/70 dark:text-linen/70">5
+                            Nights</span>
+                        <a href="<?= APP_URL ?>/packages"
+                            class="font-sans font-medium text-[10px] tracking-widest uppercase border-b border-clay pb-1 text-clay hover:opacity-75 transition-opacity">View</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="group flex flex-col gap-5">
+                <div class="overflow-hidden rounded-soft aspect-[4/5] shadow-xl shadow-charcoal/10 relative">
+                    <img alt="Kyoto Serenity"
+                        class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
+                        src="https://voyara.utsav56.me/images/hero-bg.jpg" />
+                </div>
+                <div class="w-full px-2">
+                    <div class="flex flex-col mb-2">
+                        <h3 class="font-serif font-bold text-2xl text-forest dark:text-linen leading-tight mb-1">Kyoto
+                            Serenity</h3>
+                        <span class="font-sans text-clay font-semibold text-lg">$8,400</span>
+                    </div>
+                    <p class="font-sans font-light text-sm text-charcoal/70 dark:text-linen/70 mb-5 leading-relaxed">
+                        Find inner peace amongst Zen gardens, private tea ceremonies, and ancient bamboo forests.
+                    </p>
+                    <div class="flex justify-between items-center pt-4 border-t border-forest/10 dark:border-linen/10">
+                        <span
+                            class="font-sans font-medium text-[9px] tracking-widest uppercase text-forest/70 dark:text-linen/70">6
+                            Nights</span>
+                        <a href="<?= APP_URL ?>/packages"
+                            class="font-sans font-medium text-[10px] tracking-widest uppercase border-b border-clay pb-1 text-clay hover:opacity-75 transition-opacity">View</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="group flex flex-col gap-5">
+                <div class="overflow-hidden rounded-soft aspect-[4/5] shadow-xl shadow-charcoal/10 relative">
+                    <img alt="Maldivian Atolls"
+                        class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
+                        src="https://thumbs.dreamstime.com/b/phewa-fewa-lake-pokhara-city-nepal-beautiful-boats-263484468.jpg" />
+                </div>
+                <div class="w-full px-2">
+                    <div class="flex flex-col mb-2">
+                        <h3 class="font-serif font-bold text-2xl text-forest dark:text-linen leading-tight mb-1">
+                            Maldivian Atolls</h3>
+                        <span class="font-sans text-clay font-semibold text-lg">$18,500</span>
+                    </div>
+                    <p class="font-sans font-light text-sm text-charcoal/70 dark:text-linen/70 mb-5 leading-relaxed">
+                        Escape to unparalleled isolation in a private overwater villa surrounded by crystal clear reefs.
+                    </p>
+                    <div class="flex justify-between items-center pt-4 border-t border-forest/10 dark:border-linen/10">
+                        <span
+                            class="font-sans font-medium text-[9px] tracking-widest uppercase text-forest/70 dark:text-linen/70">10
+                            Nights</span>
+                        <a href="<?= APP_URL ?>/packages"
+                            class="font-sans font-medium text-[10px] tracking-widest uppercase border-b border-clay pb-1 text-clay hover:opacity-75 transition-opacity">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div
+        class="bg-forest dark:bg-charcoal py-12 overflow-hidden border-y border-forest/5 dark:border-linen/5 transition-colors duration-300">
+        <div class="marquee-container">
+            <div
+                class="marquee-content font-serif italic text-2xl md:text-3xl text-linen/40 dark:text-linen/20 tracking-wider">
+                MALDIVES • KYOTO • TUSCANY • PATAGONIA • AMALFI COAST • REYKJAVIK • SERENGETI • SANTORINI • PROVENCE
+            </div>
+        </div>
+    </div>
+
+    <section class="py-24 bg-linen dark:bg-charcoal relative overflow-hidden transition-colors duration-300">
+        <div class="max-w-[1600px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="relative group">
+                <div class="overflow-hidden rounded-soft shadow-2xl max-w-md mx-auto lg:mx-0">
+                    <img alt="Slow Living"
+                        class="w-full aspect-[4/5] object-cover transition-transform duration-[10s] group-hover:scale-105"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGnGHes14hWR_yJHe6HxJl2nDaiWC0o9QgkoHBOh3kUGv4MPQS3hmmCtQFeTySVLCQ2so5bRZFAB7gfpFFVcBZUlUiixDF_U4I_fAd4yI2OHPbArIxKPdma1LOFPla2OqLrubwz4XQkRFmFAHitkmkc91IJjCmILYwfhdIQ7LT8hTAXJ2xZVjDNEEbBKdBnahIsBIULCDU7vYvM2orClng8tz_b43t79Z54-MxYnPjUQyVvrBu0H5-7yFcodH96qFL3W8vATGQlWY" />
+                </div>
+                <div
+                    class="absolute -bottom-6 -right-4 md:right-8 hidden md:block bg-clay dark:bg-[#A56850] p-6 rounded-soft shadow-xl text-linen max-w-[280px] transition-colors duration-300 z-10">
+                    <p class="font-serif italic text-base leading-relaxed">"Luxury isn't about speed; it's about the
+                        depth of the breath you take in a place that feels like home."</p>
+                </div>
+            </div>
+            <div class="lg:pl-8 text-center lg:text-left">
+                <span class="section-subtitle mb-4 block">Our Philosophy</span>
+                <h2
+                    class="font-serif font-extrabold text-4xl md:text-5xl text-forest dark:text-linen leading-tight mb-8">
+                    The Art of Slow Living</h2>
+                <p
+                    class="font-sans font-light text-base md:text-lg text-charcoal/80 dark:text-linen/80 leading-relaxed mb-6">
+                    Voyara was born from a desire to reclaim the soul of travel. We believe in intentional
+                    luxury—journeys that nourish the spirit and honor the land.
+                </p>
+                <p
+                    class="font-sans font-light text-sm md:text-base text-charcoal/60 dark:text-linen/60 leading-relaxed mb-10">
+                    By focusing on sustainable practices and deep cultural integration, we create legacies of experience
+                    that resonate far beyond the return flight.
+                </p>
+                <button
+                    class="font-sans font-medium text-[10px] tracking-widest uppercase border-b border-forest dark:border-linen pb-2 hover:text-clay hover:border-clay dark:hover:text-clay dark:hover:border-clay transition-all text-forest dark:text-linen">
+                    Read Our Promise
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="py-20 bg-forest dark:bg-[#1C251F] text-linen transition-colors duration-300">
+        <div class="max-w-[1600px] mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16 text-center">
+                <div class="flex flex-col items-center">
+                    <span class="font-serif font-extrabold text-5xl md:text-6xl mb-3 drop-shadow-sm">98k</span>
+                    <p class="stat-label">Global Travelers</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="font-serif font-extrabold text-5xl md:text-6xl mb-3 drop-shadow-sm">140+</span>
+                    <p class="stat-label">Destinations</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="font-serif font-extrabold text-5xl md:text-6xl mb-3 drop-shadow-sm">4.97</span>
+                    <p class="stat-label">Guest Rating</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="font-serif font-extrabold text-5xl md:text-6xl mb-3 drop-shadow-sm">12yr</span>
+                    <p class="stat-label">Editorial Excellence</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-linen dark:bg-charcoal transition-colors duration-300">
+        <div class="max-w-3xl mx-auto px-6 text-center">
+            <span class="material-symbols-outlined text-clay text-5xl mb-8 opacity-80"
+                style="font-variation-settings: 'FILL' 1;">format_quote</span>
+            <h2
+                class="font-serif font-extrabold text-2xl md:text-4xl text-forest dark:text-linen leading-snug mb-10 italic">
+                "Voyara didn't just plan a trip; they curated a chapter of our lives we will never forget. Their
+                attention to detail is what sets them apart."
+            </h2>
+            <div class="flex items-center justify-center gap-4 opacity-80">
+                <div class="h-[1px] w-8 md:w-12 bg-forest/20 dark:bg-linen/20"></div>
+                <p class="font-sans font-medium tracking-[0.2em] uppercase text-[10px] text-clay">Julianna V. — Since
+                    2018</p>
+                <div class="h-[1px] w-8 md:w-12 bg-forest/20 dark:bg-linen/20"></div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="pb-24 px-6 md:px-12 bg-linen dark:bg-charcoal transition-colors duration-300">
+        <div
+            class="max-w-[1400px] mx-auto bg-charcoal dark:bg-[#1A1A1A] p-10 md:p-14 rounded-soft overflow-hidden relative shadow-2xl border border-charcoal dark:border-linen/10">
+            <div class="absolute top-0 right-0 w-1/2 md:w-1/3 h-full opacity-10 pointer-events-none">
+                <svg class="h-full w-full" fill="none" viewbox="0 0 100 100">
+                    <circle cx="100" cy="0" r="100" stroke="#F2F0E9" stroke-width="0.5"></circle>
+                </svg>
+            </div>
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-10 relative z-10 w-full">
+                <div class="max-w-md text-center lg:text-left">
+                    <h2 class="font-serif font-extrabold text-4xl md:text-5xl text-linen mb-4">Join the Voyage</h2>
+                    <p class="font-sans font-light text-linen/70 text-sm md:text-base">Subscribe for curated inspiration
+                        and exclusive destination reveals.</p>
+                </div>
+                <div class="w-full max-w-sm">
+                    <form class="flex flex-col gap-3">
+                        <input
+                            class="bg-linen/10 border border-linen/20 py-3 md:py-4 px-6 rounded-soft font-sans font-light text-sm text-linen placeholder:text-linen/50 focus:ring-1 focus:ring-clay focus:border-clay outline-none transition-all"
+                            placeholder="Your Email Address" type="email" />
+                        <button class="btn-submit py-3 md:py-4">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer
+        class="bg-linen dark:bg-charcoal py-16 border-t border-forest/10 dark:border-linen/10 transition-colors duration-300">
+        <div class="max-w-[1600px] mx-auto px-6 md:px-12 flex flex-col items-center gap-10 text-center">
+            <div
+                class="font-serif font-extrabold text-3xl md:text-4xl text-forest dark:text-linen italic tracking-tighter">
+                Voyara</div>
+            <div class="flex flex-wrap justify-center gap-6 md:gap-12">
+                <a class="footer-link text-charcoal dark:text-linen/70 hover:text-clay dark:hover:text-clay"
+                    href="#">Privacy Policy</a>
+                <a class="footer-link text-charcoal dark:text-linen/70 hover:text-clay dark:hover:text-clay"
+                    href="#">Terms of Service</a>
+                <a class="footer-link text-clay hover:opacity-80" href="#">Luxury Membership</a>
+                <a class="footer-link text-charcoal dark:text-linen/70 hover:text-clay dark:hover:text-clay"
+                    href="#">Sustainability</a>
+            </div>
+            <div class="flex gap-6 opacity-80">
+                <a class="text-forest dark:text-linen hover:text-clay dark:hover:text-clay transition-colors hover:scale-110 transform"
+                    href="#" aria-label="Instagram">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                </a>
+                <a class="text-forest dark:text-linen hover:text-clay dark:hover:text-clay transition-colors hover:scale-110 transform"
+                    href="#" aria-label="X (Twitter)">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                </a>
+                <a class="text-forest dark:text-linen hover:text-clay dark:hover:text-clay transition-colors hover:scale-110 transform"
+                    href="#" aria-label="LinkedIn">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                </a>
+            </div>
+            <p
+                class="font-sans text-[8px] font-medium tracking-[0.3em] uppercase text-charcoal/40 dark:text-linen/40 mt-4">
+                © <?= date('Y') ?> VOYARA LUXURY TRAVEL. AN ARTISAN COLLECTIVE.
+            </p>
+        </div>
+    </footer>
+    <script>
+        function saveTheme(theme) {
+            localStorage.theme = theme;
+        }
+
+        function applyTheme(theme) {
+            var darkIcon = document.getElementById('theme-toggle-dark-icon');
+            var lightIcon = document.getElementById('theme-toggle-light-icon');
+
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+
+                darkIcon.classList.add('opacity-0', 'scale-50', 'rotate-90');
+                darkIcon.classList.remove('opacity-100', 'scale-100', 'rotate-0');
+
+                lightIcon.classList.remove('opacity-0', 'scale-50', '-rotate-90');
+                lightIcon.classList.add('opacity-100', 'scale-100', 'rotate-0');
+            } else {
+                document.documentElement.classList.remove('dark');
+
+                lightIcon.classList.add('opacity-0', 'scale-50', '-rotate-90');
+                lightIcon.classList.remove('opacity-100', 'scale-100', 'rotate-0');
+
+                darkIcon.classList.remove('opacity-0', 'scale-50', 'rotate-90');
+                darkIcon.classList.add('opacity-100', 'scale-100', 'rotate-0');
+            }
+        }
+
+        applyTheme(readTheme());
+
+        document.getElementById('theme-toggle').addEventListener('click', function () {
+            var newTheme = readTheme() === 'dark' ? 'light' : 'dark';
+            saveTheme(newTheme);
+            applyTheme(newTheme);
+        });
+
+        var mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        var mobileMenu = document.getElementById('mobile-menu');
+        var mobileMenuOpenIcon = document.getElementById('mobile-menu-open');
+        var mobileMenuCloseIcon = document.getElementById('mobile-menu-close');
+
+        mobileMenuBtn.addEventListener('click', function () {
+            if (mobileMenu.classList.contains('opacity-0')) {
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+                mobileMenu.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+
+                mobileMenuOpenIcon.classList.remove('opacity-100', 'scale-100', 'rotate-0');
+                mobileMenuOpenIcon.classList.add('opacity-0', 'scale-50', '-rotate-90');
+
+                mobileMenuCloseIcon.classList.remove('opacity-0', 'scale-50', 'rotate-90');
+                mobileMenuCloseIcon.classList.add('opacity-100', 'scale-100', 'rotate-0');
+
+            } else {
+                mobileMenu.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+                mobileMenu.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+
+                mobileMenuCloseIcon.classList.remove('opacity-100', 'scale-100', 'rotate-0');
+                mobileMenuCloseIcon.classList.add('opacity-0', 'scale-50', 'rotate-90');
+
+                mobileMenuOpenIcon.classList.remove('opacity-0', 'scale-50', '-rotate-90');
+                mobileMenuOpenIcon.classList.add('opacity-100', 'scale-100', 'rotate-0');
+            }
+        });
+    </script>
+</body>
+
+</html>

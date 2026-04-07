@@ -128,6 +128,7 @@
     </section>
 
 
+    <!-- TRENDING DESTINATIONS SECTION -->
     <section class="py-20 md:py-24 px-6 md:px-12 max-w-[1600px] mx-auto">
         <div class="mb-16 flex flex-col items-center text-center">
             <span class="section-subtitle mb-3 block">The Collection</span>
@@ -194,6 +195,7 @@
     </section>
 
 
+    <!-- MARQUEE SECTION -->
     <div
         class="bg-forest dark:bg-charcoal py-12 overflow-hidden border-y border-forest/5 dark:border-linen/5 transition-colors duration-300">
         <div class="marquee-container">
@@ -204,6 +206,7 @@
         </div>
     </div>
 
+    <!-- oUR PHILOSOPHY SECTION -->
     <section class="py-24 bg-linen dark:bg-charcoal relative overflow-hidden transition-colors duration-300">
         <div class="max-w-[1600px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div class="relative group">

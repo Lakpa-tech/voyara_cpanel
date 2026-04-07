@@ -64,7 +64,7 @@
                         class="absolute material-symbols-outlined text-lg transition-all duration-300 opacity-0 scale-50 -rotate-90">light_mode</span>
                 </button>
 <?php if (Auth::check()): ?>
-                <a href="<?= APP_URL ?>/dashboard" class="btn-primary transition-transform hover:scale-105 active:scale-95 hidden md:block">Dashboard</a>
+                <a href="<?= APP_URL ?>/dashboard" class="btn-primary transition-transform hover:scale-105 active:scale-95 hidden md:block">Profile</a>
 <?php else: ?>
                 <a href="<?= APP_URL ?>/login" class="btn-primary transition-transform hover:scale-105 active:scale-95 hidden md:block">Log In</a>
 <?php endif; ?>
@@ -91,12 +91,11 @@
         <div id="mobile-menu"
             class="opacity-0 pointer-events-none lg:hidden bg-linen dark:bg-charcoal border-b border-forest/10 dark:border-linen/10 absolute w-full left-0 top-full transition-all duration-300 shadow-xl -translate-y-4">
             <div class="flex flex-col px-6 py-6 gap-6">
+                <a class="nav-link text-lg" href="<?= APP_URL ?>">Home</a>
+                <a class="nav-link text-lg" href="<?= APP_URL ?>/packages">Packages</a>
                 <a class="nav-link text-lg" href="<?= APP_URL ?>/packages">Destinations</a>
-                <a class="nav-link text-lg" href="<?= APP_URL ?>/packages">Experiences</a>
-                <a class="nav-link text-lg" href="#">Journal</a>
-                <a class="nav-link text-lg" href="#">Concierge</a>
 <?php if (Auth::check()): ?>
-                <a href="<?= APP_URL ?>/dashboard" class="btn-primary w-full mt-2 py-3">Dashboard</a>
+                <a href="<?= APP_URL ?>/dashboard" class="btn-primary w-full mt-2 py-3">Profile</a>
 <?php else: ?>
                 <a href="<?= APP_URL ?>/login" class="btn-primary w-full mt-2 py-3">Log In</a>
 <?php endif; ?>

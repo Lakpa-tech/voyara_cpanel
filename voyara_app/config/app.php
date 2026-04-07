@@ -14,6 +14,9 @@ define('APP_DEBUG',   APP_ENV === 'development');
 
 // ROOT_PATH is already defined in public_html/index.php
 // Do not redefine it here to avoid the "already defined" warning
+if (!defined('ROOT_PATH')) {
+    define('ROOT_PATH', __DIR__ . '/../..');
+}
 
 // public_html is the sibling of voyara_app
 define('PUBLIC_HTML',  dirname(ROOT_PATH) . '/public_html');

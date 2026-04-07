@@ -1,258 +1,97 @@
 # VOYARA TRAVEL BOOKING SYSTEM
-## Complete Deployment Guide — AWS Ubuntu + Apache
+### Project Documentation & Important Updates
 
 ---
 
-## FOLDER STRUCTURE
+## Project Structure
+A professional overview of where everything lives.
 
-```
+```text
 voyara/
 ├── .htaccess                  # Apache URL rewriting + security headers
 ├── database.sql               # Full MySQL schema + seed data
+├── seed.php                   # Database seeder (Local testing ko lagi)
 ├── config/
 │   ├── app.php                # App constants, paths, debug mode
-│   ├── database.php           # DB credentials (use env vars in prod)
+│   ├── database.php           # DB credentials
 │   └── bootstrap.php          # Autoloader, session, helpers
 ├── app/
-│   ├── controllers/
-│   │   ├── AuthController.php
-│   │   ├── UserController.php
-│   │   ├── PackageController.php
-│   │   ├── BookingController.php
-│   │   ├── ReviewController.php
-│   │   ├── AdminController.php
-│   │   └── AgentController.php
-│   ├── models/
-│   │   ├── DB.php             # PDO singleton
-│   │   ├── Session.php        # Secure session management
-│   │   ├── Auth.php           # Multi-role auth
-│   │   ├── CSRF.php           # CSRF token generation/verification
-│   │   ├── Validator.php      # Input validation
-│   │   ├── FileUploader.php   # Secure file upload
-│   │   ├── UserModel.php
-│   │   ├── PackageModel.php
-│   │   ├── BookingModel.php
-│   │   ├── ReviewModel.php
-│   │   ├── AdminModel.php
-│   │   ├── AgentModel.php
-│   │   └── SettingsModel.php
-│   └── views/
-│       ├── partials/          # header, footer, flash, 404, package_card
-│       ├── user/              # home, packages, package_detail, dashboard, booking_detail, login, register, profile
-│       ├── admin/             # login, dashboard, packages/, bookings/, users/, agents/, reviews/, settings
-│       └── agent/             # login, dashboard, bookings, booking_detail
+│   ├── controllers/           # Business Logic
+│   ├── models/                # Database Queries & Models
+│   └── views/                 # UI Templates (PHP/HTML)
 ├── public/
-│   └── index.php              # Front controller / router
+│   └── index.php              # Main entry point (Router)
 ├── assets/
-│   ├── css/
-│   │   ├── main.css           # Frontend styles (Bootstrap 5 + custom)
-│   │   └── admin.css          # Admin panel styles
-│   └── js/
-│       ├── main.js            # Frontend JS (scroll, reveal, lazy-load)
-│       └── admin.js           # Admin JS (sidebar, file preview)
-└── uploads/
-    ├── packages/              # Package cover + gallery images
-    ├── receipts/              # Payment receipt uploads
-    └── avatars/               # User avatar uploads
+│   ├── css/                   # Stylesheets
+│   └── js/                    # JavaScript logic
+└── uploads/                   # User images/receipts storage
 ```
 
 ---
 
-## STEP 1 — SERVER SETUP (Ubuntu 22.04 on AWS EC2)
+##  Suggestions for hosting (Important!)
 
-```bash
-# Update system
-sudo apt update && sudo apt upgrade -y
+Hajur ko previous README ma AWS EC2 ra Apache ko setup dekheko theye. Mero suggestion mannu hunxa vane, **EC2 vanda Digital Ocean ma host gareko aalik cheaper huncha ra manage garna pani sajilo huncha.**
 
-# Install Apache, PHP 8.2, MySQL client
-sudo apt install -y apache2 php8.2 php8.2-mysql php8.2-mbstring \
-  php8.2-xml php8.2-fileinfo php8.2-gd libapache2-mod-php8.2
+### Why skip AWS EC2 & Apache?
+AWS EC2 ma manual setup garna complex hunxa, ra bills calculate garna garo huda binary spike huna sakxa. Apache pani aaja-bholi ko modern apps ko lagi RAM heavy hunxa.
 
-# Enable Apache modules
-sudo a2enmod rewrite headers
-sudo systemctl restart apache2
+###  Deep Comparison (AWS vs DigitalOcean)
+
+| Feature | AWS EC2 (Apache + MySQL) | DigitalOcean (Nginx + MariaDB) | Result |
+| :--- | :--- | :--- | :--- |
+| **Setup Cost** | Complex billing (hidden costs) | Fixed pricing ($4/mo start) | **DO wins** |
+| **Complexity** | High (Headache hunxa manual setup) | Low (Sajilo dashboard) | **DO wins** |
+| **Performance** | Apache handles traffic slowly | Nginx is lightweight & fast | **Nginx wins** |
+| **Database** | MySQL (RAM heavy, CPU load high) | MariaDB (Optimized for PHP) | **MariaDB wins** |
+| **Maintenance** | Manual management dherai chainxa | Easy snapshots & monitoring | **DO wins** |
+
+Aws le Ip ko, domain ko, ssl ko, database ko, server ko, security ko, backup ko, monitoring ko, etc dherai kura haru ko lagi extra charge garxa, jaba ki DO ma fixed price ma sab milxa.
+
+###  Recommendation:
+- **Nginx use garnu:** Apache le RAM dherai khanxa, Nginx modern ra fast xa.
+- **MariaDB use garnu:** MySQL aajkal obselete vaisako. MariaDB is the best choice for PHP. Yesle application ko performance badhaune ra server cost ghataune kaam garxa.
+- **Support chahiyema:** Yo stack host garna i can help. Hajur lai live demo chahine vaye just vannu hola. Ma yo app lai host garera dekhauthe but NDA ko issue le garena. I dont wanna make toruble for you.
+
+---
+
+##  Error in project (Fix gareko updates):
+
+Maile codebase deeply analyze garda aalik errors haru fela pare (normal basic syntax issues). Environment change vayera hoina, bas lekhda xuteko kura haru fix gardeko xu:
+
+### 1. ROOT_PATH Error
+Application run garda `ROOT_PATH is already defined` error aauxa. Maile configuration ma guard check thapi-deko xu:
+```php
+if (!defined('ROOT_PATH')) {
+    define('ROOT_PATH', __DIR__ . '/../..');
+}
 ```
 
----
+### 2. Header & Footer Bug
+Footer ra Header files ma PHP tags close vayeko theyena (trademark/watermark deko thau ma). Tesle garda HTML leak vayera design bigrerathyo. Maile closing tags thapera fix gardeko xu.
 
-## STEP 2 — MySQL DATABASE (AWS RDS or local)
-
-```sql
--- Create database and user
-CREATE DATABASE voyara_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'voyara_user'@'%' IDENTIFIED BY 'YourStrongPassword123!';
-GRANT ALL PRIVILEGES ON voyara_db.* TO 'voyara_user'@'%';
-FLUSH PRIVILEGES;
-```
-
-```bash
-# Import schema from local or EC2
-mysql -h YOUR_RDS_ENDPOINT -u voyara_user -p voyara_db < database.sql
-```
+### 3. Admin Login (Case Sensitive issue)
+Admin model ma email search garda character exact match hunu parne theyo. Aauta capital letter mismatch huda login hudaina theyo. User experience ko lagi maile yeslai **Case Insensitive** banai-deko xu. `Abcd@gmail.com` hale pani database le accept garxa.
 
 ---
 
-## STEP 3 — DEPLOY APPLICATION FILES
+## Changes maile gareko:
 
-```bash
-# Upload to EC2 (from local machine)
-scp -r -i your-key.pem voyara/ ubuntu@YOUR_EC2_IP:/var/www/
+1.  **Naya Homepage:** Purano design lai maile aasti deko modern premium design le replace gardeko xu.
+2.  **Real Data Integration:** Homepage ma paila dummy data theyo, aaile actual database logic use huna thalisakyo.
+3.  **Local Seeder:** `seed.php` thapeko xu. Local ma testing garna development ko thau dummy data halxa (Production ma use nagarnu).
 
-# Set permissions
-sudo chown -R www-data:www-data /var/www/voyara
-sudo chmod -R 755 /var/www/voyara
-sudo chmod -R 775 /var/www/voyara/uploads
-sudo mkdir -p /var/www/voyara/logs
-sudo chmod 775 /var/www/voyara/logs
-```
+maile configs haru ma mero local hisab le change gareko xa,  like database config haru yeslai hajur le production hisab le garnu hola.  
 
 ---
 
-## STEP 4 — APACHE VIRTUAL HOST
+## Contact & Feedback
 
-```bash
-sudo nano /etc/apache2/sites-available/voyara.conf
-```
+Maile yo sab kura haru hajur lai criticise garna wa, hajur ko code theek xaina vaneko haina, hajur ko code dherai ramro xa. Bas aali aali errors ra suggestions haru share gareko matra. Yadi hajur lai kei offend vo vane extreme sorry, maile bas h help garna khojeko ho.
 
-```apache
-<VirtualHost *:80>
-    ServerName yourdomain.com
-    ServerAlias www.yourdomain.com
-    DocumentRoot /var/www/voyara
+Files ko top ma hajur kai generic style and name preservation gareko xu.
 
-    <Directory /var/www/voyara>
-        Options -Indexes +FollowSymLinks
-        AllowOverride All
-        Require all granted
-    </Directory>
-
-    # Block sensitive directories
-    <DirectoryMatch "^/var/www/voyara/(config|app|logs)">
-        Require all denied
-    </DirectoryMatch>
-
-    ErrorLog  ${APACHE_LOG_DIR}/voyara_error.log
-    CustomLog ${APACHE_LOG_DIR}/voyara_access.log combined
-</VirtualHost>
-```
-
-```bash
-sudo a2ensite voyara.conf
-sudo a2dissite 000-default.conf
-sudo systemctl reload apache2
-```
-
----
-
-## STEP 5 — ENVIRONMENT VARIABLES
-
-Set these as Apache environment variables (never hardcode in files):
-
-```bash
-sudo nano /etc/apache2/sites-available/voyara.conf
-# Add inside <VirtualHost>:
-SetEnv DB_HOST     your-rds-endpoint.amazonaws.com
-SetEnv DB_PORT     3306
-SetEnv DB_NAME     voyara_db
-SetEnv DB_USER     voyara_user
-SetEnv DB_PASS     YourStrongPassword123!
-SetEnv APP_URL     https://yourdomain.com
-SetEnv APP_ENV     production
-```
-
----
-
-## STEP 6 — SSL WITH CERTBOT (HTTPS)
-
-```bash
-sudo apt install -y certbot python3-certbot-apache
-sudo certbot --apache -d yourdomain.com -d www.yourdomain.com
-```
-
----
-
-## STEP 7 — AWS SECURITY GROUP
-
-Open these inbound ports in your EC2 Security Group:
-- **22**  — SSH (your IP only)
-- **80**  — HTTP (0.0.0.0/0)
-- **443** — HTTPS (0.0.0.0/0)
-- **3306** — MySQL (EC2 security group → RDS security group only)
-
----
-
-## STEP 8 — UPLOADS SYMLINK (if DocumentRoot ≠ project root)
-
-The router serves uploads via the `/uploads` URL path.
-Ensure Apache can serve `/var/www/voyara/uploads/` directly.
-
----
-
-## DEFAULT CREDENTIALS
-
-| Role  | Email               | Password    |
-|-------|---------------------|-------------|
-| Admin | admin@voyara.com    | Admin@123   |
-
-**⚠️ Change the admin password immediately after first login via the database:**
-```sql
-UPDATE admins SET password = '$2y$12$WvfBFLi3Zv6Bbhj87.VAj.N8I.4q.3YXH45hlFRW1vZhUsJ8pS04y%' WHERE email = 'admin@voyara.com';
-
--- Generate hash with: php -r "echo password_hash('YourNewPassword', PASSWORD_BCRYPT, ['cost'=>12]);"
-```
-
----
-
-## URL STRUCTURE
-
-| URL                          | Description              |
-|------------------------------|--------------------------|
-| `/`                          | Homepage                 |
-| `/packages`                  | Package listing + filters|
-| `/packages/{slug}`           | Package detail + booking |
-| `/login` `/register`         | User auth                |
-| `/dashboard`                 | User dashboard           |
-| `/bookings/{id}`             | Booking detail + payment |
-| `/admin/login`               | Admin login              |
-| `/admin/dashboard`           | Admin dashboard          |
-| `/admin/packages`            | Package management       |
-| `/admin/bookings`            | Booking management       |
-| `/admin/users`               | User management          |
-| `/admin/agents`              | Agent management         |
-| `/admin/reviews`             | Review moderation        |
-| `/admin/settings`            | Site settings            |
-| `/agent/login`               | Agent login              |
-| `/agent/dashboard`           | Agent dashboard          |
-| `/agent/bookings`            | Agent bookings           |
-
----
-
-## SECURITY CHECKLIST
-
-- [x] PDO prepared statements on all queries
-- [x] CSRF token on every POST form
-- [x] bcrypt password hashing (cost=12)
-- [x] Secure session configuration (httponly, samesite, strict_mode)
-- [x] Session ID regeneration every 5 minutes
-- [x] File upload MIME validation via finfo (not $_FILES['type'])
-- [x] Input sanitization via Validator class
-- [x] Output escaping via `e()` helper (htmlspecialchars)
-- [x] .htaccess blocks direct access to /config, /app, /logs
-- [x] Apache security headers (X-Frame-Options, X-Content-Type, etc.)
-- [x] Role-based access control (user / admin / agent)
-- [x] Credentials from environment variables (not hardcoded)
-
----
-
-## CRON JOB (optional — session cleanup)
-
-```bash
-# Add to crontab: crontab -e
-0 2 * * * php /var/www/voyara/public/index.php cli:cleanup >> /var/www/voyara/logs/cron.log 2>&1
-```
-
----
-
-## SUPPORT
-
-Site Email: Configure at `/admin/settings`
+*   **Developer:** Utsav Pokhrel
+*   **Email:** [utsavpokhrel56@gmail.com](mailto:utsavpokhrel56@gmail.com)
+*   **GitHub:** [github.com/utsav-56](https://github.com/utsav-56)
+*   **Support:** Hosting setup or queries ko lagi contact me!

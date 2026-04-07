@@ -1,3 +1,12 @@
+<?php
+/**
+ * Author:  Kiran Khadka
+ * Version: 1.0.0 (First edition)
+ * Contact: +977-9869756622
+ * Mail:    therealkiranda@gmail.com
+ * © 2026 Kiran Khadka. All rights reserved.
+ */
+?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 

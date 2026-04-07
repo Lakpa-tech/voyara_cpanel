@@ -15,6 +15,15 @@
         rel="stylesheet" />
     <link href="<?= ASSETS_URL ?>/css/voyara_v2.css" rel="stylesheet" />
 
+    <style>
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+
     <script>
         function readTheme() {
             var theme = localStorage.getItem('theme');
@@ -127,109 +136,61 @@
             </h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start w-full mx-auto">
-
+<?php if (!empty($featured)): ?>
+    <?php foreach ($featured as $pkg): ?>
+        <?php
+        $imgSrc = $pkg['cover_image']
+          ? (strpos($pkg['cover_image'], 'http') === 0 ? $pkg['cover_image'] : UPLOAD_URL . '/packages/' . $pkg['cover_image'])
+          : ASSETS_URL . '/images/placeholder.jpg';
+        $stars   = round((float)($pkg['avg_rating'] ?? 0));
+        $rating  = number_format((float)($pkg['avg_rating'] ?? 0), 1);
+        $reviews = (int)($pkg['review_count'] ?? 0);
+        ?>
             <div class="group flex flex-col gap-5">
                 <div class="overflow-hidden rounded-soft aspect-[4/5] shadow-xl shadow-charcoal/10 relative">
-                    <img alt="Patagonian Peaks"
+                    <img alt="<?= e($pkg['title']) ?>"
                         class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0CeXXbOoWY24BBU-HR08bLae_0OneprzlDfz7bB7KR77UIyhpUVdYsoTjI3EbdMFc6hptLAjXzcNSaGOVSIVutD-cIf_WAD_OdXcFaBiE8knkZmZRIuqDxh20UP4qcWyUmqFrHvxydZf8IRCHPHAL1g64qn4w-ovE_iQSx190ntEORSPqR5Bh5evdfiUqDtFn0HP768Hl36u_KSs5MhXIq1Qxd9o8cUl9k5sQd_PYuhUsx6rvS_7csXf_79Ll6JpI4U4suCZRhVg" />
+                        src="<?= e($imgSrc) ?>" />
+                    <?php if ($pkg['is_featured']): ?>
+                        <div class="absolute top-4 left-4 bg-linen/90 dark:bg-charcoal/90 backdrop-blur px-3 py-1 rounded-full shadow-sm">
+                            <span class="font-sans font-bold text-[8px] uppercase tracking-widest text-clay">Featured</span>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <div class="w-full px-2">
                     <div class="flex flex-col mb-2">
-                        <h3 class="font-serif font-bold text-2xl text-forest dark:text-linen leading-tight mb-1">
-                            Patagonian Peaks</h3>
-                        <span class="font-sans text-clay font-semibold text-lg">From $14,200</span>
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-serif font-bold text-2xl text-forest dark:text-linen leading-tight mb-1 flex-1">
+                                <?= e($pkg['title']) ?></h3>
+                            <?php if ($reviews > 0): ?>
+                            <div class="flex items-center gap-1 mt-1 shrink-0">
+                                <span class="material-symbols-outlined text-clay text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="font-sans text-[10px] font-bold text-forest dark:text-linen"><?= $rating ?></span>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <span class="font-sans text-clay font-semibold text-lg">From <?= e(setting('currency_symbol','$')) . number_format($pkg['price'],0) ?></span>
                     </div>
-                    <p class="font-sans font-light text-sm text-charcoal/70 dark:text-linen/70 mb-5 leading-relaxed">
-                        Venture into the raw wilderness of the Southern Andes, where granite towers pierce the sky.
+                    <p class="font-sans font-light text-sm text-charcoal/70 dark:text-linen/70 mb-5 leading-relaxed line-clamp-3">
+                        <?= e($pkg['short_desc'] ?: "Venture into the raw wilderness of " . $pkg['location_name'] . ", where granite towers pierce the sky.") ?>
                     </p>
                     <div class="flex justify-between items-center pt-4 border-t border-forest/10 dark:border-linen/10">
-                        <span
-                            class="font-sans font-medium text-[9px] tracking-widest uppercase text-forest/70 dark:text-linen/70">7
-                            Nights</span>
-                        <a href="<?= APP_URL ?>/packages"
-                            class="font-sans font-medium text-[10px] tracking-widest uppercase border-b border-clay pb-1 text-clay hover:opacity-75 transition-opacity">View</a>
+                        <div class="flex flex-col">
+                            <span class="font-sans font-medium text-[9px] tracking-widest uppercase text-forest/70 dark:text-linen/70"><?= (int)$pkg['duration_days'] ?> Nights</span>
+                            <span class="font-sans text-[8px] uppercase tracking-wider text-charcoal/40 dark:text-linen/40"><?= e($pkg['location_name']) ?>, <?= e($pkg['country']) ?></span>
+                        </div>
+                        <a href="<?= APP_URL ?>/packages/<?= e($pkg['slug']) ?>"
+                            class="font-sans font-medium text-[10px] tracking-widest uppercase border-b border-clay pb-1 text-clay hover:opacity-75 transition-opacity">View Details</a>
                     </div>
                 </div>
             </div>
-
-
-            <div class="group flex flex-col gap-5">
-                <div class="overflow-hidden rounded-soft aspect-[4/5] shadow-xl shadow-charcoal/10 relative">
-                    <img alt="Swiss Alpenglow"
-                        class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO530rpNAhW3B1bLaRub978gdDSucYLo97NMUx_1TCuUt2gklsHR0fEi3IkFVq86eJ31iTUPyxsqTwSiX_OvFq6kNiOZdcphFQePBEflJN16ku8vDXK5b7L_Pc_-w3YWAvwfFIBLUFc5dBbCiW0Hy0_8VK4RXJnQ8MLF8C3m_1me-EKsYSoJEjLdKWO6cwUuHaVKIcLffruy-KDcuFX6gSUwdM01pDat4Y13cFwXyiPbvm-nWcL62dHrahwinVp7DoewhbWexCKT0" />
-                </div>
-                <div class="w-full px-2">
-                    <div class="flex flex-col mb-2">
-                        <h3 class="font-serif font-bold text-2xl text-forest dark:text-linen leading-tight mb-1">Swiss
-                            Alpenglow</h3>
-                        <span class="font-sans text-clay font-semibold text-lg">$12,800</span>
-                    </div>
-                    <p class="font-sans font-light text-sm text-charcoal/70 dark:text-linen/70 mb-5 leading-relaxed">
-                        Experience the peak of alpine luxury in St. Moritz, featuring private helicopter tours.
-                    </p>
-                    <div class="flex justify-between items-center pt-4 border-t border-forest/10 dark:border-linen/10">
-                        <span
-                            class="font-sans font-medium text-[9px] tracking-widest uppercase text-forest/70 dark:text-linen/70">5
-                            Nights</span>
-                        <a href="<?= APP_URL ?>/packages"
-                            class="font-sans font-medium text-[10px] tracking-widest uppercase border-b border-clay pb-1 text-clay hover:opacity-75 transition-opacity">View</a>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="group flex flex-col gap-5">
-                <div class="overflow-hidden rounded-soft aspect-[4/5] shadow-xl shadow-charcoal/10 relative">
-                    <img alt="Kyoto Serenity"
-                        class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
-                        src="https://voyara.utsav56.me/images/hero-bg.jpg" />
-                </div>
-                <div class="w-full px-2">
-                    <div class="flex flex-col mb-2">
-                        <h3 class="font-serif font-bold text-2xl text-forest dark:text-linen leading-tight mb-1">Kyoto
-                            Serenity</h3>
-                        <span class="font-sans text-clay font-semibold text-lg">$8,400</span>
-                    </div>
-                    <p class="font-sans font-light text-sm text-charcoal/70 dark:text-linen/70 mb-5 leading-relaxed">
-                        Find inner peace amongst Zen gardens, private tea ceremonies, and ancient bamboo forests.
-                    </p>
-                    <div class="flex justify-between items-center pt-4 border-t border-forest/10 dark:border-linen/10">
-                        <span
-                            class="font-sans font-medium text-[9px] tracking-widest uppercase text-forest/70 dark:text-linen/70">6
-                            Nights</span>
-                        <a href="<?= APP_URL ?>/packages"
-                            class="font-sans font-medium text-[10px] tracking-widest uppercase border-b border-clay pb-1 text-clay hover:opacity-75 transition-opacity">View</a>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="group flex flex-col gap-5">
-                <div class="overflow-hidden rounded-soft aspect-[4/5] shadow-xl shadow-charcoal/10 relative">
-                    <img alt="Maldivian Atolls"
-                        class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
-                        src="https://thumbs.dreamstime.com/b/phewa-fewa-lake-pokhara-city-nepal-beautiful-boats-263484468.jpg" />
-                </div>
-                <div class="w-full px-2">
-                    <div class="flex flex-col mb-2">
-                        <h3 class="font-serif font-bold text-2xl text-forest dark:text-linen leading-tight mb-1">
-                            Maldivian Atolls</h3>
-                        <span class="font-sans text-clay font-semibold text-lg">$18,500</span>
-                    </div>
-                    <p class="font-sans font-light text-sm text-charcoal/70 dark:text-linen/70 mb-5 leading-relaxed">
-                        Escape to unparalleled isolation in a private overwater villa surrounded by crystal clear reefs.
-                    </p>
-                    <div class="flex justify-between items-center pt-4 border-t border-forest/10 dark:border-linen/10">
-                        <span
-                            class="font-sans font-medium text-[9px] tracking-widest uppercase text-forest/70 dark:text-linen/70">10
-                            Nights</span>
-                        <a href="<?= APP_URL ?>/packages"
-                            class="font-sans font-medium text-[10px] tracking-widest uppercase border-b border-clay pb-1 text-clay hover:opacity-75 transition-opacity">View</a>
-                    </div>
-                </div>
-            </div>
+    <?php endforeach; ?>
+<?php else: ?>
+    <div class="col-span-full py-20 text-center">
+        <span class="material-symbols-outlined text-forest/20 dark:text-linen/20 text-6xl mb-4">explore</span>
+        <p class="font-serif italic text-forest/40 dark:text-linen/40 text-xl">No trending destinations found. Check back later.</p>
+    </div>
+<?php endif; ?>
         </div>
     </section>
 

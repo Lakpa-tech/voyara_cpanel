@@ -49,7 +49,9 @@ try {
         ['name' => 'Staff Manager', 'email' => 'staff@voyara.com', 'password' => 'Staff@123'],
     ];
 
-    $stmtAdmin = $pdo->prepare("INSERT IGNORE INTO admins (name, email, password, is_active) VALUES (?, ?, ?, 1)");
+    $stmtAdmin = $pdo->prepare("INSERT INTO admins (name, email, password, is_active) 
+                                VALUES (?, ?, ?, 1) 
+                                ON DUPLICATE KEY UPDATE name = VALUES(name), password = VALUES(password)");
     foreach ($admins as $a) {
         $hash = password_hash($a['password'], PASSWORD_BCRYPT, ['cost' => 12]);
         $stmtAdmin->execute([$a['name'], $a['email'], $hash]);
@@ -64,7 +66,9 @@ try {
         ['name' => 'Mike Navigator', 'email' => 'mike@voyara.com', 'phone' => '9800000003', 'bio' => 'Specializes in Japanese culture.'],
     ];
 
-    $stmtAgent = $pdo->prepare("INSERT IGNORE INTO agents (name, email, phone, password, bio, is_active) VALUES (?, ?, ?, ?, ?, 1)");
+    $stmtAgent = $pdo->prepare("INSERT INTO agents (name, email, phone, password, bio, is_active) 
+                                VALUES (?, ?, ?, ?, ?, 1) 
+                                ON DUPLICATE KEY UPDATE name = VALUES(name), password = VALUES(password), phone = VALUES(phone)");
     foreach ($agents as $ag) {
         $hash = password_hash('Agent@123', PASSWORD_BCRYPT, ['cost' => 12]);
         $stmtAgent->execute([$ag['name'], $ag['email'], $ag['phone'], $hash, $ag['bio']]);
@@ -82,7 +86,9 @@ try {
         ['name' => 'Fiona Gallagher', 'email' => 'fiona@example.com', 'phone' => '9841000006'],
     ];
 
-    $stmtUser = $pdo->prepare("INSERT IGNORE INTO users (name, email, phone, password, is_active) VALUES (?, ?, ?, ?, 1)");
+    $stmtUser = $pdo->prepare("INSERT INTO users (name, email, phone, password, is_active) 
+                               VALUES (?, ?, ?, ?, 1) 
+                               ON DUPLICATE KEY UPDATE name = VALUES(name), password = VALUES(password), phone = VALUES(phone)");
     $userPassword = password_hash('User@123', PASSWORD_BCRYPT, ['cost' => 12]);
     foreach ($users as $u) {
         $stmtUser->execute([$u['name'], $u['email'], $u['phone'], $userPassword]);

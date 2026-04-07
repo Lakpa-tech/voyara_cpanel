@@ -94,4 +94,3 @@ Files ko top ma hajur kai generic style and name preservation gareko xu.
 *   **Developer:** Utsav Pokhrel
 *   **Email:** [utsavpokhrel56@gmail.com](mailto:utsavpokhrel56@gmail.com)
 *   **GitHub:** [github.com/utsav-56](https://github.com/utsav-56)
-*   **Support:** Hosting setup or queries ko lagi contact me!

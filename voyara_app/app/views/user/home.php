@@ -49,10 +49,10 @@
         <div class="flex justify-between items-center px-4 md:px-12 py-4 w-full max-w-[1600px] mx-auto">
             <div class="font-serif text-2xl font-extrabold tracking-tighter text-forest dark:text-linen">Voyara</div>
             <div class="hidden lg:flex items-center gap-8">
+                <a class="nav-link" href="<?= APP_URL ?>">Home</a>
+                <a class="nav-link" href="<?= APP_URL ?>/packages">Package</a>
                 <a class="nav-link" href="<?= APP_URL ?>/packages">Destinations</a>
-                <a class="nav-link" href="<?= APP_URL ?>/packages">Experiences</a>
-                <a class="nav-link" href="#">Journal</a>
-                <a class="nav-link" href="#">Concierge</a>
+                
             </div>
             <div class="flex items-center gap-2 md:gap-6">
 
@@ -320,13 +320,11 @@
                 Voyara</div>
             <div class="flex flex-wrap justify-center gap-6 md:gap-12">
                 <a class="footer-link text-charcoal dark:text-linen/70 hover:text-clay dark:hover:text-clay"
-                    href="#">Privacy Policy</a>
+                    href="<?= APP_URL ?>/packages">Explore packages</a>
                 <a class="footer-link text-charcoal dark:text-linen/70 hover:text-clay dark:hover:text-clay"
-                    href="#">Terms of Service</a>
-                <a class="footer-link text-clay hover:opacity-80" href="#">Luxury Membership</a>
-                <a class="footer-link text-charcoal dark:text-linen/70 hover:text-clay dark:hover:text-clay"
-                    href="#">Sustainability</a>
-            </div>
+                    href="<?= APP_URL ?>/packages">Explore Destinations</a>
+          
+                </div>
             <div class="flex gap-6 opacity-80">
                 <a class="text-forest dark:text-linen hover:text-clay dark:hover:text-clay transition-colors hover:scale-110 transform"
                     href="#" aria-label="Instagram">

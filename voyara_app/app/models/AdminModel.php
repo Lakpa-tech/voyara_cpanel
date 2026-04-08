@@ -8,7 +8,7 @@
  */
 class AdminModel {
     public static function findByEmail(string $email): ?array {
-        return DB::fetchOne('SELECT * FROM admins WHERE LOWER(email) = LOWER(?) AND is_active = 1', [$email]);
+        return DB::fetchOne('SELECT * FROM admins WHERE email = ? AND is_active = 1', [$email]);
     }
 
     public static function verifyPassword(string $plain, string $hash): bool {

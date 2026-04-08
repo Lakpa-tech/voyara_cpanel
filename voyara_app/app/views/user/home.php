@@ -118,7 +118,7 @@
         <div class="absolute inset-0 z-0">
             <img alt="Majestic Mountains"
                 class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-[10s]"
-                src="https://voyara.utsav56.me/images/hero-bg.jpg" />
+                src="<?= ASSETS_URL ?>/images/bg.png" />
             <div class="absolute inset-0 bg-charcoal/40 dark:bg-charcoal/60 mix-blend-multiply"></div>
         </div>
         <div class="relative z-10 text-center px-4 md:px-6 max-w-4xl">
